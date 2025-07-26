@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lucky Spin</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f9f9f9;
+      padding-top: 50px;
+    }
+    #wheel {
+      margin: 0 auto;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 10px solid #555;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    .segment {
+      width: 50%;
+      height: 50%;
+      position: absolute;
+      transform-origin: 100% 100%;
+      background: #f39c12;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      text-align: center;
+    }
+    #spinBtn {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #pointer {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      margin-left: -10px;
+      width: 0; 
+      height: 0; 
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 20px solid red;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎉 Lucky Spin 🎉</h1>
+  <div style="position: relative; width: 300px; margin: auto;">
+    <div id="pointer"></div>
+    <div id="wheel"></div>
+  </div>
+  <button id="spinBtn">Spin</button>
+  <h2 id="result"></h2>
+
+  <script>
+    const prizes = [
+      "Offer 20% Any Car",
+      "Thank You for Joining! Enjoy a Sweet Treat",
+      "C200 Free One Day Rent",
+      "Extra 2 Hours – Free Late Return",
+      "Offer 10% Any Car",
+      "Rent 3 Days, Get 1 Day Free",
+      "Free Toll",
+      "Free Delivery",
+      "Free Petron Any Car"
+    ];
+
+    const wheel = document.getElementById("wheel");
+    const result = document.getElementById("result");
+    const spinBtn = document.getElementById("spinBtn");
+
+    let angle = 360 / prizes.length;
+
+    prizes.forEach((prize, i) => {
+      const segment = document.createElement("div");
+      segment.className = "segment";
+      segment.style.transform = `rotate(${i * angle}deg) skewY(-${90 - angle}deg)`;
+      segment.style.background = i % 2 === 0 ? "#e74c3c" : "#2ecc71";
+      segment.innerHTML = `<div style="transform: skewY(${90 - angle}deg) rotate(${angle / 2}deg); width: 100px;">${prize}</div>`;
+      wheel.appendChild(segment);
+    });
+
+    let spinning = false;
+    spinBtn.onclick = () => {
+      if (spinning) return;
+      spinning = true;
+      const spins = Math.floor(Math.random() * 5) + 5;
+      const finalIndex = Math.floor(Math.random() * prizes.length);
+      const rotateTo = 360 * spins + (360 - finalIndex * angle - angle / 2);
+
+      wheel.style.transition = "transform 5s ease-out";
+      wheel.style.transform = `rotate(${rotateTo}deg)`;
+
+      setTimeout(() => {
+        result.textContent = "🎁 You won: " + prizes[finalIndex];
+        spinning = false;
+      }, 5200);
+    };
+  </script>
+</body>
+</html>
